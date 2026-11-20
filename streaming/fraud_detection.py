@@ -1,4 +1,6 @@
-from pyspark.sql import functions as F
+from pyspark.sql import SparkSession, functions as F
+
+spark = SparkSession.builder.getOrCreate()   
 
 CHECKPOINT = "/Volumes/bank/ops/checkpoints/fraud"
 TARGET = "bank.gold.fraud_alerts"
@@ -36,5 +38,6 @@ def run(output_mode="update", checkpoint=CHECKPOINT, target=TARGET):
         .trigger(availableNow=True)
         .start())
 
-q = run()
-q.awaitTermination()
+if __name__ == "__main__":
+    q = run()
+    q.awaitTermination()
