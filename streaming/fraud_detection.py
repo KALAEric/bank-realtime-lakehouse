@@ -8,7 +8,7 @@ TARGET = "bank.gold.fraud_alerts"
 def build_alerts(src):
     return (src
         .withWatermark("event_time", "5 minutes")
-        .groupBy("card_id", F.window("event_time", "10 minutes"))
+        .groupBy("card_id", F.window("event_time", "10 minutes", "5 minutes"))
         .agg(F.count("*").alias("n_tx"), F.sum("amount").alias("total"))
         .where("n_tx >= 5 OR total > 3000")
         .select("card_id",
